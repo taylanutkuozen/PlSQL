@@ -1,0 +1,40 @@
+----------=PL/SQL Static-Dynamic=--------------
+---DDL(Data Definiion Language{Create,Alter,Drop}) and DCL(Data Control Language{Grant,Revoke}) of commands play role as DYNAMIC SQL(Execute Immediate). They don't use directly.
+---DML(Data Manipulation Language{Select,Insert,Delete,Update}) and TCL(Transaction Control Language{Commit,Rollback}) of commands play role as STATIC SQL.They use directly.
+------------------------------------------------------------------------------------
+-----=Using SQL Commands in PLSQL(Static SQL - DML - TCL)=-----
+--desc employees;---Employees tablosunun description'ýný verir.
+--create table employees2 as select * from employees;---bir tablonun aynýsýný ayný verilerle oluþturma komutudur.
+--select * from employees2;
+--desc employees2
+--DECLARE
+--    emp_id employees2.employee_id%type;
+--    emp_first_name employees2.first_name%type:='Utku';
+--    emp_last_name  employees2.last_name%type:='OZEN';
+--    emp_job_id employees2.job_id%type:='PL/SQL'; --ilk deðer atamalarýný yapmýþ olduk.
+--BEGIN
+--    select nvl(max(EMPLOYEE_ID), 0) + 1 into emp_id from employees2; --nvl komutu null veri olup olmadýðýný kontrol eder.
+--    insert into employees2(employee_id,first_name,last_name,job_id,email,hire_date) values(emp_id,emp_first_name,emp_last_name,emp_job_id,'abc@xyz.com',sysdate);
+--    update employees2 SET job_id='DBA' where employee_id=emp_id;
+--    delete employees2 where employee_id=emp_id
+--    RETURNING EMPLOYEE_ID,FIRST_NAME, LAST_NAME, JOB_ID INTO emp_id,emp_first_name,emp_last_name,emp_job_id;---returning hangi kayýt delete edildiyse o kayda ait deðerleri elde eder.
+--    rollback;
+--    dbms_output.put_line(emp_id||' '||emp_first_name || ' ' || emp_last_name || ' ' || emp_job_id);
+--END;
+--select * from employees2 where employee_id=207 rollback iþlemi olduðu için boþ tablo dönecektir.
+------------------
+--DECLARE
+--    emp_id employees2.employee_id%type;
+--    emp_first_name employees2.first_name%type:='Utku';
+--    emp_last_name  employees2.last_name%type:='OZEN';
+--    emp_job_id employees2.job_id%type:='PL/SQL'; --ilk deðer atamalarýný yapmýþ olduk.
+--BEGIN
+--    select nvl(max(EMPLOYEE_ID), 0) + 1 into emp_id from employees2; --nvl komutu null veri olup olmadýðýný kontrol eder.
+--    insert into employees2(employee_id,first_name,last_name,job_id,email,hire_date) values(emp_id,emp_first_name,emp_last_name,emp_job_id,'abc@xyz.com',sysdate);
+--    update employees2 SET job_id='DBA' where employee_id=emp_id;
+--    /*delete employees2 where employee_id=emp_id
+--    RETURNING EMPLOYEE_ID,FIRST_NAME, LAST_NAME, JOB_ID INTO emp_id,emp_first_name,emp_last_name,emp_job_id;---returning hangi kayýt delete edildiyse o kayda ait deðerleri elde eder.*/
+--    commit;
+--    dbms_output.put_line(emp_id||' '||emp_first_name || ' ' || emp_last_name || ' ' || emp_job_id);
+--END;
+--select * from employees2 where employee_id=207 commit iþleminde deðer göreceðiz.
